@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Secure Print Cloud</string>
+    <string name="show_password">Show password</string>
+    <string name="hide_password">Hide password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="example_email">example@test.com</string>
+    <string name="email">Email</string>
+    <string name="must_be_valid_email">Must be a valid email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+</resources>
