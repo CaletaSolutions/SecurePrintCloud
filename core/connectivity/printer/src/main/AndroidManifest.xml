@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <receiver
+            android:name="com.caletasolutions.core.connectivity.printer.receiver.AccessoryReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.hp.jetadvantage.link.action.ACCESSORY_READY" />
+                <action android:name="com.hp.workpath.action.ACCESSORY_STATUS_ACTION" />
+                <action android:name="com.hp.workpath.action.ACCESSORY_REPORT_ACTION" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

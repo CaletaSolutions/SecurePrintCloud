@@ -14,11 +14,12 @@
         android:theme="@style/Theme.SecurePrintCloud"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".CaletaAuthenticationActivity"
             android:exported="false"
             android:label="@string/app_name"
             android:theme="@style/Theme.SecurePrintCloud">
         </activity>
+
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -8,6 +9,19 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/auth" />
+            <option value="$PROJECT_DIR$/auth/data" />
+            <option value="$PROJECT_DIR$/auth/domain" />
+            <option value="$PROJECT_DIR$/auth/presentation" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/connectivity" />
+            <option value="$PROJECT_DIR$/core/connectivity/domain" />
+            <option value="$PROJECT_DIR$/core/connectivity/networking" />
+            <option value="$PROJECT_DIR$/core/connectivity/printer" />
+            <option value="$PROJECT_DIR$/core/data" />
+            <option value="$PROJECT_DIR$/core/domain" />
+            <option value="$PROJECT_DIR$/core/presentation" />
+            <option value="$PROJECT_DIR$/core/presentation/designsystem" />
             <option value="$PROJECT_DIR$/single-tenant" />
             <option value="$PROJECT_DIR$/workpathLib" />
           </set>

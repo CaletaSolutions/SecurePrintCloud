@@ -1,46 +1,75 @@
 package com.caletasolutions.secureprintcloud
 
 import android.app.Application
-import android.util.Log
+import com.caletasolutions.auth.data.di.authDataModule
+import com.caletasolutions.auth.presentation.di.loginViewModelModule
+import com.caletasolutions.core.connectivity.printer.tasks.WorkpathInitializationTask
+import com.caletasolutions.core.data.di.coreDataModule
+import com.caletasolutions.core.data.logger.CaletaDebugTree
 import com.caletasolutions.core.event.SDKEvent
-import com.caletasolutions.core.tasks.InitializationTask
-import com.caletasolutions.secureprintcloud.di.singleTenantModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import timber.log.Timber
+
 
 class CaletaSecurePrintCloud : Application() {
-    private lateinit var sdkInitTask: InitializationTask
-    private val applicationScope = CoroutineScope(Job() + Dispatchers.Main)
-    private val tag = "CaletaSecurePrintCloud"
+
+    private lateinit var sdkInitTask: WorkpathInitializationTask
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     override fun onCreate() {
         super.onCreate()
+        setupLogging()
+        setupDependencyInjection()
+        initializeSdk()
+    }
 
+    private fun setupLogging() {
+//                if (BuildConfig.DEBUG) {
+//                    Timber.plant(CaletaDebugTree())
+//                }
+        Timber.plant(CaletaDebugTree())
+    }
+
+    private fun setupDependencyInjection() {
         startKoin {
-            modules(singleTenantModule)
+            androidContext(this@CaletaSecurePrintCloud)
+            modules(loginViewModelModule,authDataModule,coreDataModule)
         }
+    }
 
+    private fun initializeSdk() {
+        sdkInitTask = WorkpathInitializationTask(applicationContext)
 
-        sdkInitTask = InitializationTask(applicationContext)
-        applicationScope.launch(Dispatchers.Default) {
-            sdkInitTask.initialize()
+        applicationScope.launch {
+            try {
+                withContext(Dispatchers.Default) {
+                    sdkInitTask.initialize()
+                }
+                observeSdkInitialization()
+            } catch (e: Exception) {
+                Timber.e("SDK Initialization Failed: ${e.localizedMessage}")
+            }
         }
-        applicationScope.launch(Dispatchers.Main) {
-            sdkInitTask.sdkInitializationUpdate.collect { event ->
-                when(event){
-                    is SDKEvent.SDKInitializationError -> {
-                        Log.e(tag, "SDK Initialization Error ${event.tr.localizedMessage}")
-                    }
-                    is SDKEvent.SDKInitializationSuccess -> {
-                        Log.i(tag, "SDK Initialization Success")
-                    }
+    }
+
+    private suspend fun observeSdkInitialization() {
+        sdkInitTask.sdkInitializationUpdate.collect { event ->
+            when (event) {
+                is SDKEvent.SDKInitializationError -> {
+                    Timber.e("SDK Initialization Error: ${event.tr.localizedMessage}")
+                }
+
+                is SDKEvent.SDKInitializationSuccess -> {
+                    Timber.i("SDK Initialization Success")
                 }
             }
-
         }
     }
 
@@ -49,3 +78,5 @@ class CaletaSecurePrintCloud : Application() {
         applicationScope.cancel()
     }
 }
+
+
