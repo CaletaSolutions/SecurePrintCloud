@@ -56,6 +56,8 @@ dependencies {
 
     implementation(project(":core:presentation:designsystem"))
     implementation(project(":auth:domain"))
+    implementation(libs.timber)
+
 
 
 

@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.timber)
     implementation(project(":core:domain"))
     implementation(project(":core:connectivity:printer"))
+    implementation(project(":core:connectivity:domain"))
     implementation(libs.bundles.koin.compose)
 
 

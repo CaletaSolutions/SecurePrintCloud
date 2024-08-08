@@ -19,11 +19,13 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
@@ -59,7 +61,56 @@ fun LoginScreenRoot(
 }
 
 @Composable
-fun CardInfoScreen(cardNumber: String?) {
+fun AuthScreen(
+    state: LoginState,
+    onAction: (LoginAction) -> Unit
+) {
+    if (state.isDecisionPending){
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .requiredWidth(500.dp)
+                .fillMaxHeight()
+                .padding(horizontal = 16.dp)
+                .padding(vertical = 32.dp)
+                .padding(top = 16.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
+                Image(
+                    painter = LogoImage,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .requiredSize(125.dp)
+                        .clip(CircleShape)
+                )
+            }
+            Spacer(modifier = Modifier.height(25.dp))
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
+                CircularProgressIndicator(color = Color.White)
+            }
+        }
+    }
+    else{
+        if (state.isCardLoginFlow) {
+            CardLoginFlowScreen(cardNumber = state.cardNumber)
+        } else {
+            ManualLoginFlowScreen(state = state, onAction = onAction)
+        }
+    }
+}
+
+@Composable
+fun CardLoginFlowScreen(cardNumber: String?) {
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -93,12 +144,8 @@ fun CardInfoScreen(cardNumber: String?) {
 
 }
 
-
 @Composable
-fun AuthScreen(
-    state: LoginState,
-    onAction: (LoginAction) -> Unit
-) {
+fun ManualLoginFlowScreen(state: LoginState, onAction: (LoginAction) -> Unit) {
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -165,24 +212,24 @@ fun AuthScreen(
 
 @Preview(showBackground = true, device = Devices.TABLET)
 @Composable
-private fun RegisterScreenPreview() {
+private fun ManualLoginFlowScreenPreview() {
     SecurePrintTheme {
         SecurePrintScaffold(
             modifier = Modifier.fillMaxSize(),
         ) {
-            AuthScreen(LoginState(), {})
+            ManualLoginFlowScreen(LoginState(), {})
         }
     }
 }
 
 @Preview(showBackground = true, device = Devices.TABLET)
 @Composable
-private fun CardInfoScreenPreview() {
+private fun CardLoginFlowScreenPreview() {
     SecurePrintTheme {
         SecurePrintScaffold(
             modifier = Modifier.fillMaxSize(),
         ) {
-            CardInfoScreen(cardNumber = "1234 5678 9012 3456")
+            CardLoginFlowScreen(cardNumber = "1234 5678 9012 3456")
         }
     }
 }

@@ -162,12 +162,12 @@ class AccessoryReceiver : BroadcastReceiver() {
 
     private fun initiateSignIn(cardNumber: String) {
         val result = Result()
-        Timber.d("initiateSignIn")
+        Timber.i("Sending card data $cardNumber to channel")
         appContext?.let { AccessService.initiateSignIn(it, result) }
         Timber.i("AccessService.initiateSignIn(): $result")
         receiverScope.launch {
             CardTapNotifier.channel.send(cardNumber)
-            Timber.i("Card data $cardNumber sent to channel")
+            CardTapNotifier.channel.close()
         }
     }
 

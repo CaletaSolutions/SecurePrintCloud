@@ -11,5 +11,9 @@ data class LoginState(
     val password: TextFieldState = TextFieldState(),
     val isPasswordVisible: Boolean = false,
     val isRegistering: Boolean = false,
-    val canRegister : Boolean = false
+    val canRegister : Boolean = false,
+
+    val isDecisionPending : Boolean = true,
+    val isCardLoginFlow : Boolean = false,
+    val cardNumber : String? = null,
 )
