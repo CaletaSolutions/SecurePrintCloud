@@ -1,30 +1,23 @@
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalFoundationApi::class,
+    ExperimentalFoundationApi::class
+)
 
 package com.caletasolutions.auth.presentation.login
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -32,9 +25,13 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.caletasolutions.auth.presentation.R
-import com.caletasolutions.core.presentation.designsystem.LogoImage
+import com.caletasolutions.core.presentation.designsystem.CardTapIcon
+import com.caletasolutions.core.presentation.designsystem.CheckIcon
+import com.caletasolutions.core.presentation.designsystem.EmailIcon
 import com.caletasolutions.core.presentation.designsystem.SecurePrintTheme
+import com.caletasolutions.core.presentation.designsystem.components.LoginFormHeader
 import com.caletasolutions.core.presentation.designsystem.components.SecurePrintActionButton
+import com.caletasolutions.core.presentation.designsystem.components.SecurePrintLabel
 import com.caletasolutions.core.presentation.designsystem.components.SecurePrintPasswordTextField
 import com.caletasolutions.core.presentation.designsystem.components.SecurePrintScaffold
 import com.caletasolutions.core.presentation.designsystem.components.SecurePrintTextField
@@ -51,6 +48,7 @@ fun LoginScreenRoot(
                 is LoginAction.OnTogglePasswordVisibilityClick -> {
                     viewModel.onAction(action)
                 }
+
                 is LoginAction.OnLoginClick -> {
                     viewModel.onLoginClick()
                 }
@@ -65,30 +63,8 @@ fun AuthScreen(
     state: LoginState,
     onAction: (LoginAction) -> Unit
 ) {
-    if (state.isDecisionPending){
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .requiredWidth(500.dp)
-                .fillMaxHeight()
-                .padding(horizontal = 16.dp)
-                .padding(vertical = 32.dp)
-                .padding(top = 16.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
-                Image(
-                    painter = LogoImage,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .requiredSize(125.dp)
-                        .clip(CircleShape)
-                )
-            }
+    if (state.isDecisionPending) {
+        LoginFormHeader {
             Spacer(modifier = Modifier.height(25.dp))
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -99,77 +75,39 @@ fun AuthScreen(
                 CircularProgressIndicator(color = Color.White)
             }
         }
-    }
-    else{
+
+    } else {
         if (state.isCardLoginFlow) {
-            CardLoginFlowScreen(cardNumber = state.cardNumber)
+            CardLoginLayout(cardNumber = state.cardNumber)
         } else {
-            ManualLoginFlowScreen(state = state, onAction = onAction)
+            ManualLoginLayout(state = state, onAction = onAction)
         }
     }
 }
 
 @Composable
-fun CardLoginFlowScreen(cardNumber: String?) {
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .requiredWidth(500.dp)
-            .fillMaxHeight()
-            .padding(horizontal = 16.dp)
-            .padding(vertical = 32.dp)
-            .padding(top = 16.dp)
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-        ) {
-            Image(
-                painter = LogoImage,
-                contentDescription = null,
-                modifier = Modifier
-                    .requiredSize(125.dp)
-                    .clip(CircleShape)
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
+fun CardLoginLayout(cardNumber: String?) {
+    LoginFormHeader {
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = cardNumber ?: "Empty",
+            text = stringResource(id = R.string.card_sign_in),
             style = MaterialTheme.typography.headlineLarge
         )
         Spacer(modifier = Modifier.height(8.dp))
+        SecurePrintLabel(
+            state = TextFieldState("Received Card UID $cardNumber"),
+            startIcon = CardTapIcon,
+            endIcon = CheckIcon,
+            title = stringResource(id = R.string.card),
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(8.dp))
     }
-
 }
 
 @Composable
-fun ManualLoginFlowScreen(state: LoginState, onAction: (LoginAction) -> Unit) {
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .requiredWidth(500.dp)
-            .fillMaxHeight()
-            .padding(horizontal = 16.dp)
-            .padding(vertical = 32.dp)
-            .padding(top = 16.dp)
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-        ) {
-            Image(
-                painter = LogoImage,
-                contentDescription = null,
-                modifier = Modifier
-                    .requiredSize(125.dp)
-                    .clip(CircleShape)
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
+fun ManualLoginLayout(state: LoginState, onAction: (LoginAction) -> Unit) {
+    LoginFormHeader {
         Text(
             text = stringResource(id = R.string.sign_in),
             style = MaterialTheme.typography.headlineLarge
@@ -178,8 +116,8 @@ fun ManualLoginFlowScreen(state: LoginState, onAction: (LoginAction) -> Unit) {
 
         SecurePrintTextField(
             state = state.email,
-            startIcon = com.caletasolutions.core.presentation.designsystem.EmailIcon,
-            endIcon = if (state.isEmailValid) com.caletasolutions.core.presentation.designsystem.CheckIcon else null,
+            startIcon = EmailIcon,
+            endIcon = if (state.isEmailValid) CheckIcon else null,
             hint = stringResource(id = R.string.example_email),
             title = stringResource(id = R.string.email),
             modifier = Modifier.fillMaxWidth(),
@@ -210,14 +148,14 @@ fun ManualLoginFlowScreen(state: LoginState, onAction: (LoginAction) -> Unit) {
     }
 }
 
-@Preview(showBackground = true, device = Devices.TABLET)
+//@Preview(showBackground = true, device = Devices.TABLET)
 @Composable
 private fun ManualLoginFlowScreenPreview() {
     SecurePrintTheme {
         SecurePrintScaffold(
             modifier = Modifier.fillMaxSize(),
         ) {
-            ManualLoginFlowScreen(LoginState(), {})
+            ManualLoginLayout(LoginState(), {})
         }
     }
 }
@@ -229,7 +167,7 @@ private fun CardLoginFlowScreenPreview() {
         SecurePrintScaffold(
             modifier = Modifier.fillMaxSize(),
         ) {
-            CardLoginFlowScreen(cardNumber = "1234 5678 9012 3456")
+            CardLoginLayout(cardNumber = "E469YH90")
         }
     }
 }

@@ -3,11 +3,10 @@ package com.caletasolutions.core.presentation.designsystem
 import androidx.compose.ui.graphics.Color
 
 
-//val SPCGreen = Color(0xFF00F15E)
 val SPCGreen = Color(0xFF2F8B9F)
-val SPCGreen30 = Color(0x4D00F15E)
+val SPCGreen30 = Color(0xFF407596)
 val SPCGreen10 = Color(0x1A00F15E)
-val SPCGreen5 = Color(0x0D00F15E)
+val SPCGreen5 = Color(0xFF2C607F)
 val SPCBlack = Color(0xFF080707)
 val SPCGray = Color(0xFF87938C)
 val SPCGray40 = Color(0x6687938C)
@@ -22,3 +21,5 @@ val test3 = Color(0xFF4EB1DA)
 val test4 = Color(0xFF2F8B9F)
 val test5 = Color(0xFF407596)
 val test6 = Color(0xFF2C607F)
+
+val CompanyTextColor = Color(0xFF54646F)

@@ -6,4 +6,6 @@
     <string name="must_be_valid_email">Must be a valid email</string>
     <string name="password">Password</string>
     <string name="submit">Submit</string>
+    <string name="card_sign_in">Card Sign in</string>
+    <string name="card">Access Card</string>
 </resources>

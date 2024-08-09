@@ -23,11 +23,11 @@ val EmailIcon: ImageVector
 val CheckIcon: ImageVector
     @Composable
     get() = ImageVector.vectorResource(id = R.drawable.check)
-
-val LogoIcon: ImageVector
+val CardTapIcon: ImageVector
     @Composable
-    get() = ImageVector.vectorResource(id = R.drawable.launcher_logo)
+    get() = ImageVector.vectorResource(id = R.drawable.access_card)
 
 val LogoImage: Painter
     @Composable
     get() = painterResource(id = R.drawable.launcher_logo)
+

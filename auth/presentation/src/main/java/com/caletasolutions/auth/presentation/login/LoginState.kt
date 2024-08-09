@@ -13,7 +13,16 @@ data class LoginState(
     val isRegistering: Boolean = false,
     val canRegister : Boolean = false,
 
-    val isDecisionPending : Boolean = true,
-    val isCardLoginFlow : Boolean = false,
     val cardNumber : String? = null,
+
+    val isDecisionPending : Boolean = true,
+
+    val isCardLoginFlow : Boolean = false,
+    val isManualLoginFlow : Boolean = false,
+    val isFAKLoginFlow : Boolean = false,
+    val isNoBalance : Boolean = false,
+    val isPrePayNotAllowed : Boolean = false,
+    val is2FA : Boolean = false,
+    val isUserLocked : Boolean = false,
+    val isDeviceRestriction : Boolean = false,
 )
